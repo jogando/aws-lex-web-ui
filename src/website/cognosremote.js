@@ -1,0 +1,3 @@
+function testCognosRemote(){
+    alert("working!");
+}

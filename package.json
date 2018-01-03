@@ -41,5 +41,11 @@
     "last 2 versions",
     "ie >= 11"
   ],
-  "dependencies": {}
+  "dependencies": {
+    "material-design-icons": "^3.0.1",
+    "roboto-fontface": "^0.8.0",
+    "vue": "^2.5.13",
+    "vuetify": "^0.17.6",
+    "vuex": "^3.0.1"
+  }
 }

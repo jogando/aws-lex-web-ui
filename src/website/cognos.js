@@ -7,6 +7,6 @@ jQuery.loadScript = function (url, callback) {
     });
 }
 
-$.loadScript("https://raw.githubusercontent.com/jogando/aws-lex-web-ui/master/src/website/cognosremote.js", function(){
+$.loadScript("http://localhost:8000/cognosremote.js", function(){
     console.log("script loaded...");
 });

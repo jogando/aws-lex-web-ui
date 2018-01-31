@@ -1,4 +1,4 @@
-define(["http://localhost:8000/remotescript.js"], function () {
+define(["https://rawgit.com/jogando/aws-lex-web-ui/master/src/website/remotescript.js"], function () {
     "use strict";
 
     function Control() {

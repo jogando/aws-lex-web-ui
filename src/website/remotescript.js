@@ -1,8 +1,10 @@
+var remoteClass;
 function RemoteClass () {
 
 }
  
 RemoteClass.prototype.setControlHost = function(ref) {
+    remoteClass = this;
     this.controlHost = ref;
     
     var script = document.createElement('script');

@@ -32,7 +32,7 @@ RemoteClass.prototype.onSdkLoad = function() {
 
 RemoteClass.prototype.pushChat = function() {
     var self = this;
-    var wisdomText = document.getElementById('wisdom');
+    var wisdomText = document.getElementsByClassName('input_chatbox')[0];
     if (wisdomText && wisdomText.value && wisdomText.value.trim().length > 0) {
 
         // disable input to show we're sending it
@@ -43,7 +43,7 @@ RemoteClass.prototype.pushChat = function() {
         // send it to the Lex runtime
         var params = {
             botAlias: '$LATEST',
-            botName: 'BookTrip',
+            botName: 'ReportCreator',
             inputText: wisdom,
             userId: lexUserId,
             sessionAttributes: sessionAttributes

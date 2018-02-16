@@ -1,109 +1,77 @@
+//https://aws.amazon.com/blogs/machine-learning/capturing-voice-input-in-a-browser/
 var remoteClass;
-function RemoteClass () {
+function RemoteClass() {
 
 }
- 
-RemoteClass.prototype.setControlHost = function(ref) {
+
+RemoteClass.prototype.setControlHost = function (ref) {
     remoteClass = this;
     this.controlHost = ref;
-    
+
     var script = document.createElement('script');
     var self = this;
     script.onload = function () {
         self.onSdkLoad();
     };
     script.src = "https://sdk.amazonaws.com/js/aws-sdk-2.41.0.min.js";
-    
+
     document.head.appendChild(script);
 };
 
-RemoteClass.prototype.onSdkLoad = function() {
+RemoteClass.prototype.onSdkLoad = function () {
     AWS.config.region = 'us-east-1'; // Region
     AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-    // Provide your Pool Id here
+        // Provide your Pool Id here
         IdentityPoolId: 'us-east-1:f40ca8b1-d79a-43a9-9316-ee4ab3e76d37',
     });
 
-    var lexruntime = new AWS.LexRuntime();
-    var lexUserId = 'chatbot-demo' + Date.now();
-    var sessionAttributes = {};
-
-}
-
-RemoteClass.prototype.pushChat = function() {
+    var script = document.createElement('script');
     var self = this;
-    var wisdomText = document.getElementsByClassName('input_chatbox')[0];
-    if (wisdomText && wisdomText.value && wisdomText.value.trim().length > 0) {
+    script.onload = function () {
+        self.onAudioControlLoad();
+    };
+    script.src = "https://rawgit.com/awslabs/aws-lex-browser-audio-capture/master/dist/aws-lex-audio.min.js";
 
-        // disable input to show we're sending it
-        var wisdom = wisdomText.value.trim();
-        wisdomText.value = '...';
-        wisdomText.locked = true;
+    document.head.appendChild(script);
+}
 
-        // send it to the Lex runtime
-        var params = {
-            botAlias: '$LATEST',
-            botName: 'ReportCreator',
-            inputText: wisdom,
-            userId: lexUserId,
-            sessionAttributes: sessionAttributes
+RemoteClass.prototype.onAudioControlLoad = function () {
+    var audioControl = new LexAudio.audioControl();
+
+    var script = document.createElement('script');
+    var self = this;
+    script.onload = function () {
+        self.onRendererLoad();
+    };
+    script.src = "https://rawgit.com/awslabs/aws-lex-browser-audio-capture/master/example/renderer.js";
+
+    document.head.appendChild(script);
+}
+
+RemoteClass.prototype.onRendererLoad = function () {
+    var waveform = window.Waveform();
+    var message = document.getElementById('message');
+    var config, conversation;
+    message.textContent = 'Passive';
+    document.getElementById('audio-control').onclick = function () {
+        config = {
+            lexConfig: { botName: "ReportCreator" }
         };
-        this.showRequest(wisdom);
-        lexruntime.postText(params, function(err, data) {
-            if (err) {
-                console.log(err, err.stack);
-                self.showError('Error:  ' + err.message + ' (see console for details)')
+        conversation = new LexAudio.conversation(config, function (state) {
+            message.textContent = state + '...';
+            if (state === 'Listening') {
+                waveform.prepCanvas();
             }
-            if (data) {
-                // capture the sessionAttributes for the next cycle
-                sessionAttributes = data.sessionAttributes;
-                // show response and/or error/dialog status
-                showResponse(data);
+            if (state === 'Sending') {
+                waveform.clearCanvas();
             }
-            // re-enable input
-            wisdomText.value = '';
-            wisdomText.locked = false;
+        }, function (data) {
+            console.log('Transcript: ', data.inputTranscript, ", Response: ", data.message);
+        }, function (error) {
+            message.textContent = error;
+        }, function (timeDomain, bufferLength) {
+            waveform.visualizeAudioBuffer(timeDomain, bufferLength);
         });
-    }
-    // we always cancel form submission
-    return false;
+        conversation.advanceConversation();
+    };
 }
-
-RemoteClass.prototype.showRequest = function(daText) {
-    var conversationDiv = document.getElementById('conversation');
-    var requestPara = document.createElement("P");
-    requestPara.className = 'userRequest';
-    requestPara.appendChild(document.createTextNode(daText));
-    conversationDiv.appendChild(requestPara);
-    conversationDiv.scrollTop = conversationDiv.scrollHeight;
-}
-
-RemoteClass.prototype.showError = function(daText) {
-    var conversationDiv = document.getElementById('conversation');
-    var errorPara = document.createElement("P");
-    errorPara.className = 'lexError';
-    errorPara.appendChild(document.createTextNode(daText));
-    conversationDiv.appendChild(errorPara);
-    conversationDiv.scrollTop = conversationDiv.scrollHeight;
-}
-
-RemoteClass.prototype.showReponse = function(lexResponse) {
-    var conversationDiv = document.getElementById('conversation');
-    var responsePara = document.createElement("P");
-    responsePara.className = 'lexResponse';
-    if (lexResponse.message) {
-        responsePara.appendChild(document.createTextNode(lexResponse.message));
-        responsePara.appendChild(document.createElement('br'));
-    }
-    if (lexResponse.dialogState === 'ReadyForFulfillment') {
-        responsePara.appendChild(document.createTextNode(
-            'Ready for fulfillment'));
-        // TODO:  show slot values
-    } else {
-        responsePara.appendChild(document.createTextNode(
-            '(' + lexResponse.dialogState + ')'));
-    }
-    conversationDiv.appendChild(responsePara);
-    conversationDiv.scrollTop = conversationDiv.scrollHeight;
-}
-

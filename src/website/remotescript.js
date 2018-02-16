@@ -49,7 +49,7 @@ RemoteClass.prototype.onAudioControlLoad = function () {
 }
 
 RemoteClass.prototype.onRendererLoad = function () {
-    var waveform = window.Waveform();
+    //var waveform = window.Waveform();
     var message = document.getElementById('message');
     var config, conversation;
     message.textContent = 'Passive';
@@ -60,17 +60,19 @@ RemoteClass.prototype.onRendererLoad = function () {
         conversation = new LexAudio.conversation(config, function (state) {
             message.textContent = state + '...';
             if (state === 'Listening') {
-                waveform.prepCanvas();
+                console.log("listening");
+                //waveform.prepCanvas();
             }
             if (state === 'Sending') {
-                waveform.clearCanvas();
+                console.log("sending");
+                //waveform.clearCanvas();
             }
         }, function (data) {
             console.log('Transcript: ', data.inputTranscript, ", Response: ", data.message);
         }, function (error) {
             message.textContent = error;
         }, function (timeDomain, bufferLength) {
-            waveform.visualizeAudioBuffer(timeDomain, bufferLength);
+            //waveform.visualizeAudioBuffer(timeDomain, bufferLength);
         });
         conversation.advanceConversation();
     };

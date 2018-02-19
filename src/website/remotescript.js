@@ -30,7 +30,7 @@ RemoteClass.prototype.onSdkLoad = function () {
     script.onload = function () {
         self.onAudioControlLoad();
     };
-    script.src = "https://rawgit.com/awslabs/aws-lex-browser-audio-capture/master/dist/aws-lex-audio.min.js";
+    script.src = "https://rawgit.com/awslabs/aws-lex-browser-audio-capture/master/dist/aws-lex-audio.js";
 
     document.head.appendChild(script);
 }

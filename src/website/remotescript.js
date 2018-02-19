@@ -53,7 +53,7 @@ RemoteClass.prototype.onRendererLoad = function () {
     var message = document.getElementsByClassName('message-box')[0];
     var config, conversation;
     message.textContent = 'Passive';
-    document.getElementById('audio-control').onclick = function () {
+    document.getElementsByClassName('audio-control')[0].onclick = function () {
         config = {
             lexConfig: { botName: "ReportCreator" }
         };

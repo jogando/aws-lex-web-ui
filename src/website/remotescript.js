@@ -49,7 +49,7 @@ RemoteClass.prototype.onAudioControlLoad = function () {
 }
 
 RemoteClass.prototype.onRendererLoad = function () {
-    //var waveform = window.Waveform();
+    var waveform = window.Waveform();
     var message = document.getElementById('message');
     var config, conversation;
     message.textContent = 'Passive';

@@ -50,7 +50,7 @@ RemoteClass.prototype.onAudioControlLoad = function () {
 
 RemoteClass.prototype.onRendererLoad = function () {
     //var waveform = window.Waveform();
-    var message = document.getElementById('message');
+    var message = document.getElementsByClassName('message-box')[0];
     var config, conversation;
     message.textContent = 'Passive';
     document.getElementById('audio-control').onclick = function () {

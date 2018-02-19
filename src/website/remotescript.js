@@ -43,13 +43,13 @@ RemoteClass.prototype.onAudioControlLoad = function () {
     script.onload = function () {
         self.onRendererLoad();
     };
-    script.src = "https://rawgit.com/awslabs/aws-lex-browser-audio-capture/master/example/renderer.js";
+    script.src = "https://rawgit.com/jogando/aws-lex-web-ui/master/src/website/renderer.js";
 
     document.head.appendChild(script);
 }
 
 RemoteClass.prototype.onRendererLoad = function () {
-    var waveform = window.Waveform();
+    //var waveform = window.Waveform();
     var message = document.getElementById('message');
     var config, conversation;
     message.textContent = 'Passive';

@@ -1,7 +1,7 @@
 (function () {
     'use strict';
-    var work = require('webworkify');
-    var worker = work(require('./worker.js'));
+    var work = require('https://cdn.jsdelivr.net/npm/webworkify@1.5.0/index.min.js');
+    var worker = work(require('https://rawgit.com/jogando/aws-lex-web-ui/master/src/website/worker.js'));
     var audio_context, audio_stream;
   
     /**

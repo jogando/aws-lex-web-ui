@@ -28,9 +28,33 @@ RemoteClass.prototype.onSdkLoad = function () {
     var script = document.createElement('script');
     var self = this;
     script.onload = function () {
+        self.onWorkerLoad();
+    };
+    script.src = "https://rawgit.com/jogando/aws-lex-web-ui/master/src/website/worker.js";
+
+    document.head.appendChild(script);
+}
+
+RemoteClass.prototype.onWorkerLoad = function () {
+
+    var script = document.createElement('script');
+    var self = this;
+    script.onload = function () {
+        self.onRecorderLoad();
+    };
+    script.src = "https://rawgit.com/jogando/aws-lex-web-ui/master/src/website/recorder.js";
+
+    document.head.appendChild(script);
+}
+
+RemoteClass.prototype.onRecorderLoad = function () {
+
+    var script = document.createElement('script');
+    var self = this;
+    script.onload = function () {
         self.onAudioControlLoad();
     };
-    script.src = "https://rawgit.com/awslabs/aws-lex-browser-audio-capture/master/dist/aws-lex-audio.js";
+    script.src = "https://rawgit.com/jogando/aws-lex-web-ui/master/src/website/aws-lex-audios.js";
 
     document.head.appendChild(script);
 }

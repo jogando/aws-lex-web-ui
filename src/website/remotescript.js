@@ -54,7 +54,7 @@ RemoteClass.prototype.onRecorderLoad = function () {
     script.onload = function () {
         self.onAudioControlLoad();
     };
-    script.src = "https://rawgit.com/jogando/aws-lex-web-ui/master/src/website/aws-lex-audios.js";
+    script.src = "https://rawgit.com/jogando/aws-lex-web-ui/master/src/website/aws-lex-audio.js";
 
     document.head.appendChild(script);
 }

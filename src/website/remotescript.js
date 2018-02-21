@@ -79,8 +79,8 @@ Recorder.prototype.init = function () {
             var data = [];
 
             _this.recorder = new MediaRecorder(stream);
-            _this.userAudio = document.getElementsByClassName('user-speech')[0];
-            _this.lexAudio = document.getElementsByClassName('lex-speech')[0];
+            //_this.userAudio = document.getElementsByClassName('user-speech')[0];
+            //_this.lexAudio = document.getElementsByClassName('lex-speech')[0];
 
             _this.recorder.ondataavailable = function (e) {
                 data.push(e.data);
@@ -98,7 +98,7 @@ Recorder.prototype.init = function () {
 
                 var blobData = new Blob(data, { type: 'audio/x-l16' });
 
-                _this.userAudio.src = window.URL.createObjectURL(blobData);
+                //_this.userAudio.src = window.URL.createObjectURL(blobData);
 
                 var reader = new FileReader();
 
@@ -187,8 +187,8 @@ Recorder.prototype.sendToServer = function (audioData) {
             var arrayBuffer = uInt8Array.buffer;
             var blob = new Blob([arrayBuffer]);
             var url = URL.createObjectURL(blob);
-            _this.lexAudio.src = url;
-            _this.lexAudio.play();
+            //_this.lexAudio.src = url;
+            //_this.lexAudio.play();
             //_this.setState({ 'lexResponseText': data.message });
         }
     });

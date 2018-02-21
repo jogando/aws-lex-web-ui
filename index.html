@@ -1,0 +1,43 @@
+<html>
+    <head>
+        <script src="https://sdk.amazonaws.com/js/aws-sdk-2.48.0.min.js"></script>
+        
+    </head>
+    <body>
+
+        <script type="text/javascript">
+            var waveform = window.Waveform();
+            var message = document.getElementById('message');
+            var config, conversation;
+            message.textContent = 'Passive';
+        
+            document.getElementById('audio-control').onclick = function () {
+        
+                AWS.config.credentials = new AWS.Credentials(document.getElementById('ACCESS_ID').value, document.getElementById('SECRET_KEY').value, null);
+                AWS.config.region = 'us-east-1';
+                
+                config = {
+                    lexConfig: { botName: document.getElementById('BOT').value }
+                };
+        
+                conversation = new LexAudio.conversation(config, function (state) {
+                    message.textContent = state + '...';
+                    if (state === 'Listening') {
+                        waveform.prepCanvas();
+                    }
+                    if (state === 'Sending') {
+                        waveform.clearCanvas();
+                    }
+                }, function (data) {
+                    console.log('Transcript: ', data.inputTranscript, ", Response: ", data.message);
+                }, function (error) {
+                    message.textContent = error;
+                }, function (timeDomain, bufferLength) {
+                    waveform.visualizeAudioBuffer(timeDomain, bufferLength);
+                });
+                conversation.advanceConversation();
+            };
+        
+        </script>
+    </body>
+</html>

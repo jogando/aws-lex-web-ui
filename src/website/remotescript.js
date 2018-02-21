@@ -79,8 +79,8 @@ Recorder.prototype.init = function () {
             var data = [];
 
             _this.recorder = new MediaRecorder(stream);
-            _this.userAudio = document.getElementById('user-speech');
-            _this.lexAudio = document.getElementById('lex-speech');
+            _this.userAudio = document.getElementsByClassName('user-speech')[0];
+            _this.lexAudio = document.getElementsByClassName('lex-speech')[0];
 
             _this.recorder.ondataavailable = function (e) {
                 data.push(e.data);

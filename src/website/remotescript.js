@@ -46,7 +46,7 @@ function Recorder() {
     this.lexAudio = {};
 
     //configurations
-    var AWSConfig = new AWS.CognitoIdentityCredentials({ IdentityPoolId: 'us-east-1:29f91578-56e6-4e0a-8e00-6944c2d9d70b' });
+    var AWSConfig = new AWS.CognitoIdentityCredentials({ IdentityPoolId: 'us-east-1:f40ca8b1-d79a-43a9-9316-ee4ab3e76d37' });
     var LexConfig = new AWS.Config({
         credentials: AWSConfig,
         region: 'us-east-1',
@@ -173,7 +173,7 @@ Recorder.prototype.sendToServer = function (audioData) {
     var _this = this;
     var params = {
         botAlias: '$LATEST', /* required */
-        botName: 'OrderFlowers', /* required */
+        botName: 'ReportCreator', /* required */
         contentType: 'audio/x-l16; sample-rate=16000; channel-count=1', /* required */
         inputStream: audioData, /* required */
         userId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', /* required */

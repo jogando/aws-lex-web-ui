@@ -183,6 +183,7 @@ Recorder.prototype.sendToServer = function (audioData) {
     this.lexruntime.postContent(params, function (err, data) {
         if (err) console.log('ERROR!', err, err.stack); // an error occurred
         else {
+            document.getElementsByClassName("lex-response")[0].value = data.message;
             var uInt8Array = new Uint8Array(data.audioStream);
             var arrayBuffer = uInt8Array.buffer;
             var blob = new Blob([arrayBuffer]);

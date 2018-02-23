@@ -41,6 +41,7 @@ function Recorder() {
 
     //variables
     this.recorder = {};
+    this.status = "";
     this.audioContext = new AudioContext();
     this.userAudio = {};
     this.lexAudio = {};
@@ -121,10 +122,34 @@ Recorder.prototype.init = function () {
         .catch(function onError(error) {
             console.log(error.message);
         });
+    this.updateStatus("idle");
 };
+
+Recorder.prototype.updateStatus = function (status) {
+    this.status = status;
+
+    var btnMain = document.getElementById("btnMain");
+
+    switch(status){
+        case "recording":
+            btnMain.disabled = false;
+            btnMain.value = "Stop";
+            btnMain.onclick = this.stop;
+            break;
+        case "idle":
+            btnMain.disabled = false;
+            btnMain.value = "Record";
+            btnMain.onclick = this.record;
+            break;
+        case "loading":
+            btnMain.disabled = true;
+            break;
+    }
+}
 
 Recorder.prototype.record = function () {
     this.recorder.start();
+    this.updateStatus("recording");
     /*this.setState({
         recorder: 'recording'
     });*/
@@ -132,6 +157,7 @@ Recorder.prototype.record = function () {
 
 Recorder.prototype.stop = function () {
     this.recorder.stop();
+    this.updateStatus("recording");
     /*this.setState({
         recorder: 'idle'
     });*/
@@ -170,6 +196,7 @@ Recorder.prototype.convertFloat32ToInt16 = function (buffer) {
 };
 
 Recorder.prototype.sendToServer = function (audioData) {
+    this.renderReponse(null);
     var _this = this;
     var params = {
         botAlias: '$LATEST', /* required */
@@ -180,29 +207,13 @@ Recorder.prototype.sendToServer = function (audioData) {
         accept: 'audio/mpeg'
     };
 
+    this.updateStatus("loading");
     this.lexruntime.postContent(params, function (err, data) {
+        _this.updateStatus("idle");
+        
         if (err) console.log('ERROR!', err, err.stack); // an error occurred
         else {
-            if(data.inputTranscript){
-                document.getElementsByClassName("lex-response-transcript")[0].innerHTML ="<b>Transcript:</b>&nbsp;" + data.inputTranscript;
-            }
-            if(data.intentName){
-                document.getElementsByClassName("lex-response-intent")[0].innerHTML ="<b>Intent:</b>&nbsp;" + data.intentName;
-            }
-            if(data.slots){
-                var html = "<b>Slots</b><br/>";
-                for (var property in data.slots) {
-                    if (data.slots.hasOwnProperty(property)) {
-                        html += property + ": "+data.slots[property];
-                        html += "<br/>";
-                    }
-                }
-
-                document.getElementsByClassName("lex-response-slot")[0].innerHTML = html;
-            }
-            if(data.message){
-                document.getElementsByClassName("lex-response")[0].innerHTML ="<hr/><b>Response:</b>" + data.message;
-            }
+            _this.renderReponse(data);
             var uInt8Array = new Uint8Array(data.audioStream);
             var arrayBuffer = uInt8Array.buffer;
             var blob = new Blob([arrayBuffer]);
@@ -212,4 +223,28 @@ Recorder.prototype.sendToServer = function (audioData) {
             //_this.setState({ 'lexResponseText': data.message });
         }
     });
+}
+
+Recorder.prototype.renderReponse = function (data) {
+    var transcriptElmnt = document.getElementsByClassName("lex-response-transcript")[0];
+    data && data.inputTranscript ? transcriptElmnt.innerHTML = "<b>Transcript:</b>&nbsp;"+data.inputTranscript : transcriptElmnt.innerHTML = "";
+
+    var intentElmnt = document.getElementsByClassName("lex-response-intent")[0];
+    data && data.intentName ? intentElmnt.innerHTML = "<b>Intent:</b>&nbsp;"+data.intentName : intentElmnt.innerHTML = "";
+
+    var messageElmnt = document.getElementsByClassName("lex-response")[0];
+    data && data.message ? messageElmnt.innerHTML = "<hr/><b>Response:</b>" + data.message : messageElmnt.innerHTML = "";
+
+    document.getElementsByClassName("lex-response-slot")[0].innerHTML = "";
+    if(data && data.slots){
+        var html = "<b>Slots</b><br/>";
+        for (var property in data.slots) {
+            if (data.slots.hasOwnProperty(property)) {
+                html += property + ": "+data.slots[property];
+                html += "<br/>";
+            }
+        }
+
+        document.getElementsByClassName("lex-response-slot")[0].innerHTML = html;
+    }
 }

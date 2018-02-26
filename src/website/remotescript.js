@@ -128,7 +128,7 @@ Recorder.prototype.init = function () {
 Recorder.prototype.updateStatus = function (status) {
     this.status = status;
 
-    var btnMain = document.getElementById("btnMain");
+    var btnMain = document.getElementsByClassName("btnMain")[0];
 
     switch(status){
         case "recording":

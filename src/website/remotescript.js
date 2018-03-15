@@ -200,7 +200,7 @@ Recorder.prototype.sendToServer = function (audioData) {
     var _this = this;
     var params = {
         botAlias: '$LATEST', /* required */
-        botName: 'ReportCreator', /* required */
+        botName: 'bi_smart_test_jogando', /* required */
         contentType: 'audio/x-l16; sample-rate=16000; channel-count=1', /* required */
         inputStream: audioData, /* required */
         userId: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', /* required */

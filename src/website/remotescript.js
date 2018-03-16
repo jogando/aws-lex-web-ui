@@ -47,7 +47,7 @@ function Recorder() {
     this.lexAudio = {};
 
     //configurations
-    var AWSConfig = new AWS.CognitoIdentityCredentials({ IdentityPoolId: 'us-east-1:f40ca8b1-d79a-43a9-9316-ee4ab3e76d37' });
+    var AWSConfig = new AWS.CognitoIdentityCredentials({ IdentityPoolId: 'us-east-1:cdb1aaa3-ebc7-4f7b-b749-b483873d7847' });
     var LexConfig = new AWS.Config({
         credentials: AWSConfig,
         region: 'us-east-1',

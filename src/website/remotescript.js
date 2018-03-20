@@ -196,7 +196,7 @@ Recorder.prototype.convertFloat32ToInt16 = function (buffer) {
 };
 
 Recorder.prototype.sendToServer = function (audioData) {
-    this.renderReponse(null);
+    this.handleResponse(null);
     var _this = this;
     var params = {
         botAlias: '$LATEST', /* required */
@@ -213,7 +213,7 @@ Recorder.prototype.sendToServer = function (audioData) {
         
         if (err) console.log('ERROR!', err, err.stack); // an error occurred
         else {
-            _this.renderReponse(data);
+            _this.handleResponse(data,_this);
             var uInt8Array = new Uint8Array(data.audioStream);
             var arrayBuffer = uInt8Array.buffer;
             var blob = new Blob([arrayBuffer]);
@@ -225,7 +225,23 @@ Recorder.prototype.sendToServer = function (audioData) {
     });
 }
 
-Recorder.prototype.renderReponse = function (data) {
+Recorder.prototype.parseSlotContent = function (value) {
+    var words = value.split(" ");
+    var result = [];
+
+    var skipWords = ["and",","];
+
+    for(var i=0;i<words.length;i++){
+        if(skipWords.indexOf(words[i])>-1){
+            continue;
+        }
+        result.push(words[i]);
+    }
+
+    return result;
+}
+
+Recorder.prototype.handleResponse = function (data,_this) {
     var transcriptElmnt = document.getElementsByClassName("lex-response-transcript")[0];
     data && data.inputTranscript ? transcriptElmnt.innerHTML = "<b>Transcript:</b>&nbsp;"+data.inputTranscript : transcriptElmnt.innerHTML = "";
 
@@ -240,7 +256,8 @@ Recorder.prototype.renderReponse = function (data) {
         var html = "<b>Slots</b><br/>";
         for (var property in data.slots) {
             if (data.slots.hasOwnProperty(property)) {
-                html += property + ": "+data.slots[property];
+                var values = JSON.stringify(_this.parseSlotContent(data.slots[property]));
+                html += property + ": "+ values;
                 html += "<br/>";
             }
         }
